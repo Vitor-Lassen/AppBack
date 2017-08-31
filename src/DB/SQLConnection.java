@@ -16,6 +16,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+
 public class SQLConnection {
+    public static Connection con; 
+    static String drive = "com.microsoft.sqlserver.jdbc.SQLServerDriver"; 
+    static String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName = DB_BACK"; 
+    static String usuario = "user"; 
+    static String senha = "1234567";
     
+    public void connect() throws ClassNotFoundException,InstantiationException,IllegalAccessException,SQLException {
+        Class.forName(drive).newInstance(); 
+        con = DriverManager.getConnection(url, usuario, senha); 
+    }
+    public void disconnect()throws SQLException{
+        con.close();
+    }
+
 }
