@@ -1,55 +1,54 @@
 
 package appback;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import DB.SQLConnection;
-import java.sql.ResultSet;
 
-import java.text.DecimalFormat;
+import java.sql.SQLException;
+
+import DB.TBCustumerAccount;
+
+import java.util.Scanner;
 
 
 public class AppBack {
 
-public static void main(String[] args) throws ClassNotFoundException,SQLException,InstantiationException,IllegalAccessException {
-   
-        SQLConnection sqlcon = new SQLConnection();
-        sqlcon.connect();
-        String sql = "INSERT INTO TB_CUSTOMER_ACCOUNT VALUES('3','46254966832','VITOR',1,1000)";
-        PreparedStatement stmt = sqlcon.con.prepareStatement(sql);
-        
-        stmt.execute();
-        stmt.close();
-       
-        System.err.println("Gravado!!!");
-        
-        stmt = sqlcon.con.prepareStatement("SELECT * FROM TB_CUSTOMER_ACCOUNT WHERE VL_TOTAL > 560 AND ID_CUSTOMER BETWEEN 1500 AND 2700 ORDER BY VL_TOTAL DESC");
-        
-        ResultSet rs = stmt.executeQuery();
-        double salario=0,count = 0;
-
-        String id_customer, cpf_cnpj, nm_customer, is_active, vl_total;
-        DecimalFormat nf = new DecimalFormat("R$ ###,###,##0.00");
-
-        while (rs.next()){
-            id_customer = rs.getString("ID_CUSTOMER");
-            cpf_cnpj = rs.getString("CPF_CNPJ");
-            nm_customer = rs.getString("NM_CUSTOMMER");
-            is_active = rs.getString("IS_ACTIVE");
-            vl_total = nf.format(rs.getDouble("VL_TOTAL"));
-            salario += rs.getDouble("VL_TOTAL");
-           count ++;
-            
-            System.out.println("ID: "+id_customer+", CPF/CNPJ: "+ cpf_cnpj+", Nome: " + nm_customer+", Cadastro: "+is_active+", Valor: "+vl_total);
+public static void main(String[] args)  throws ClassNotFoundException,IllegalAccessException,InstantiationException,SQLException {
+        TBCustumerAccount tbca = new TBCustumerAccount();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Bem Vindo!\n");
+        int opcao;
+        do {
+            System.out.print("\nDigite:\n1 - para adicionar um registro.\n2 - para realizar a consulta.\n3 - para finalizar\n");
+            opcao = scanner.nextInt();
+        }while(opcao < 1 || opcao >3);
+     
+        if(opcao ==1){
+            do {
+                int id_customer;         
+                String nm_customer,cpf_cnpj;
+                boolean is_active;
+                double vl_total;
+                System.out.println("Novo cadastro, Digite:\n");
+                System.out.println("ID: ");
+                id_customer = scanner.nextInt();
+                System.out.println("CPF / CNPJ (Somente Números) : ");
+                cpf_cnpj = scanner.next();
+                System.out.println("Nome: ");
+                scanner.nextLine();
+                nm_customer = scanner.nextLine();
+                System.out.println("Ativo? Digite: (true/false) ");
+                is_active = scanner.nextBoolean();
+                System.out.println("Valor: ");
+                vl_total = scanner.nextDouble();
+                tbca.insert(id_customer, cpf_cnpj, nm_customer, is_active, vl_total);
+                System.out.println("\nDeseja adicionar outro cadastro? \n (digite 1 para sim e qualquer outro valor para não)\n ");
+                opcao = scanner.nextInt();
+                System.out.println("\n\n");
+            }while(opcao == 1);
+            tbca.select();
         }
-        System.out.print("A média dos registros com salários maiores que 560 e com identificadores entre 1500 e 2700 é: "+ salario / count );
-
-       
-       
-        rs.close();
-        stmt.close();
-   
-        
+        else if(opcao == 2){
+            tbca.select();
+        }
     }
 }
 
