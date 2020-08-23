@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 
 public class SQLConnection {
-    public static Connection con; 
+    private static Connection con; 
     static String drive = "com.microsoft.sqlserver.jdbc.SQLServerDriver"; 
     static String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName = DB_BACK"; 
     static String usuario = "user"; 
